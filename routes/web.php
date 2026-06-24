@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ShoppingListController;
+use App\Http\Controllers\CompletedShoppingListController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,4 +30,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/shopping-list', [ShoppingListController::class, 'store']);
     Route::post('/shopping-list/{id}/complete', [ShoppingListController::class, 'complete']);
     Route::delete('/shopping-list/{id}', [ShoppingListController::class, 'destroy']);
+    Route::get('/completed_shopping_list/list', [CompletedShoppingListController::class, 'index']);
 });

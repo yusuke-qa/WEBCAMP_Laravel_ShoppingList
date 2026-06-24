@@ -15,7 +15,7 @@
 
 <h2>「買うもの」一覧</h2>
 
-<a href="/completed-list">購入済み「買うもの」一覧</a><br>
+<a href="/completed_shopping_list/list">購入済み「買うもの」一覧</a><br>
 
 <table border="1">
     <tr>
@@ -29,14 +29,16 @@
         <td>
             <form action="/shopping-list/{{ $item->id }}/complete" method="post">
                 @csrf
-                <input type="submit" value="完了">
+                <input type="submit" value="完了"
+                    onclick="return confirm('この「買うもの」を「完了」にします。よろしいですか？')">
             </form>
         </td>
         <td>
             <form action="/shopping-list/{{ $item->id }}" method="post">
                 @csrf
                 @method('DELETE')
-                <input type="submit" value="削除">
+                <input type="submit" value="削除"
+                    onclick="return confirm('この「買うもの」を「削除」します。よろしいですか？')">
             </form>
         </td>
     </tr>

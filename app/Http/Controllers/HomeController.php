@@ -13,7 +13,7 @@ class HomeController extends Controller
     {
         $shoppingLists = ShoppingList::where('user_id', Auth::id())
             ->orderBy('name')
-            ->paginate(5);
+            ->paginate(3);
 
         return view('home', compact('shoppingLists'));
     }
