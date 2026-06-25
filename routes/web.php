@@ -6,6 +6,9 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ShoppingListController;
 use App\Http\Controllers\CompletedShoppingListController;
+use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\AdminHomeController;
+use App\Http\Controllers\AdminUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +21,7 @@ use App\Http\Controllers\CompletedShoppingListController;
 |
 */
 
+// ユーザ画面
 Route::get('/', [AuthController::class, 'index'])->name('login');
 Route::post('/login', [AuthController::class, 'store']);
 Route::get('/logout', [AuthController::class, 'destroy']);
@@ -31,4 +35,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/shopping-list/{id}/complete', [ShoppingListController::class, 'complete']);
     Route::delete('/shopping-list/{id}', [ShoppingListController::class, 'destroy']);
     Route::get('/completed_shopping_list/list', [CompletedShoppingListController::class, 'index']);
+});
+
+// 管理画面
+Route::get('/admin', [AdminAuthController::class, 'index'])->name('admin.login');
+Route::post('/admin/login', [AdminAuthController::class, 'store']);
+Route::get('/admin/logout', [AdminAuthController::class, 'destroy']);
+
+Route::middleware('admin.auth')->group(function () {
+    Route::get('/admin/home', [AdminHomeController::class, 'index']);
+    Route::get('/admin/user/list', [AdminUserController::class, 'index']);
 });
