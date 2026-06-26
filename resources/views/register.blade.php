@@ -11,7 +11,7 @@
     </ul>
 @endif
 
-<form action="/register" method="post">
+<form action="/user/register" method="post">
     @csrf
     名前：<input type="text" name="name" value="{{ old('name') }}"><br>
     email：<input type="text" name="email" value="{{ old('email') }}"><br>

@@ -7,14 +7,14 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class RegisterController extends Controller
+class UserController extends Controller
 {
     public function index()
     {
         return view('register');
     }
 
-    public function store(Request $request)
+    public function register(Request $request)
     {
         $request->validate([
             'name'     => ['required'],

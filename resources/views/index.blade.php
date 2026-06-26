@@ -16,6 +16,6 @@
     email：<input type="text" name="email" value="{{ old('email') }}"><br>
     パスワード：<input type="password" name="password"><br>
     <input type="submit" value="ログインする"><br>
-    <a href="/register">会員登録</a>
+    <a href="/user/register">会員登録</a>
 </form>
 @endsection

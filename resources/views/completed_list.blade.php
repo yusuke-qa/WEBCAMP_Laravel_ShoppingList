@@ -3,7 +3,7 @@
 @section('contents')
 <h1>購入済み「買うもの」一覧</h1>
 
-<a href="/home">「買うもの」一覧に戻る</a><br>
+<a href="/shopping_list/list">「買うもの」一覧に戻る</a><br>
 
 <table border="1">
     <tr>

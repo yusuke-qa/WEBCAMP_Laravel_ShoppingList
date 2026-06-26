@@ -2,19 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class AdminAuthController extends Controller
+class AuthController extends Controller
 {
     public function index()
     {
         return view('admin.index');
     }
 
-    public function store(Request $request)
+    public function login(Request $request)
     {
         $credentials = $request->validate([
             'login_id' => ['required'],
@@ -23,7 +24,7 @@ class AdminAuthController extends Controller
 
         if (Auth::guard('admin')->attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect('/admin/home');
+            return redirect('/admin/top');
         }
 
         return back()->withErrors([
@@ -31,7 +32,7 @@ class AdminAuthController extends Controller
         ]);
     }
 
-    public function destroy(Request $request)
+    public function logout(Request $request)
     {
         Auth::guard('admin')->logout();
         $request->session()->invalidate();

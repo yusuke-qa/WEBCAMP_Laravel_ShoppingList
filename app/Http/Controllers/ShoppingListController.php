@@ -12,23 +12,30 @@ use Illuminate\Support\Facades\DB;
 
 class ShoppingListController extends Controller
 {
-    public function store(Request $request)
+    public function list()
     {
-        $request->validate([
-            'name' => ['required'],
-        ]);
+        $shoppingLists = ShoppingList::where('user_id', Auth::id())
+            ->orderBy('name')
+            ->paginate(3);
+
+        return view('home', compact('shoppingLists'));
+    }
+
+    public function register(Request $request)
+    {
+        $request->validate(['name' => ['required']]);
 
         ShoppingList::create([
             'user_id' => Auth::id(),
             'name'    => $request->input('name'),
         ]);
 
-        return redirect('/home')->with('message', '「買うもの」を登録しました！！');
+        return redirect('/shopping_list/list')->with('message', '「買うもの」を登録しました！！');
     }
 
-    public function complete($id)
+    public function complete($shopping_list_id)
     {
-        $item = ShoppingList::where('id', $id)
+        $item = ShoppingList::where('id', $shopping_list_id)
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
@@ -40,16 +47,16 @@ class ShoppingListController extends Controller
             $item->delete();
         });
 
-        return redirect('/home');
+        return redirect('/shopping_list/list');
     }
 
-    public function destroy($id)
+    public function delete($shopping_list_id)
     {
-        ShoppingList::where('id', $id)
+        ShoppingList::where('id', $shopping_list_id)
             ->where('user_id', Auth::id())
             ->firstOrFail()
             ->delete();
 
-        return redirect('/home');
+        return redirect('/shopping_list/list');
     }
 }

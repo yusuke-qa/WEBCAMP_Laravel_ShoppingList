@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ShoppingListController;
 use App\Http\Controllers\CompletedShoppingListController;
-use App\Http\Controllers\AdminAuthController;
-use App\Http\Controllers\AdminHomeController;
-use App\Http\Controllers\AdminUserController;
+
+use App\Http\Controllers\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\Admin\HomeController as AdminHomeController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,28 +23,37 @@ use App\Http\Controllers\AdminUserController;
 |
 */
 
-// ユーザ画面
-Route::get('/', [AuthController::class, 'index'])->name('login');
-Route::post('/login', [AuthController::class, 'store']);
-Route::get('/logout', [AuthController::class, 'destroy']);
-
-Route::get('/register', [RegisterController::class, 'index']);
-Route::post('/register', [RegisterController::class, 'store']);
-
-Route::middleware('auth')->group(function () {
-    Route::get('/home', [HomeController::class, 'index']);
-    Route::post('/shopping-list', [ShoppingListController::class, 'store']);
-    Route::post('/shopping-list/{id}/complete', [ShoppingListController::class, 'complete']);
-    Route::delete('/shopping-list/{id}', [ShoppingListController::class, 'destroy']);
-    Route::get('/completed_shopping_list/list', [CompletedShoppingListController::class, 'index']);
+// 買い物リスト
+Route::get('/', [AuthController::class, 'index'])->name('front.index');
+Route::post('/login', [AuthController::class, 'login']);
+// 会員登録
+Route::prefix('/user')->group(function () {
+    Route::get('/register', [UserController::class, 'index'])->name('front.user.register');
+    Route::post('/register', [UserController::class, 'register'])->name('front.user.register.post');
+});
+// 認可処理
+Route::middleware(['auth'])->group(function () {
+    Route::prefix('/shopping_list')->group(function () {
+        Route::get('/list', [ShoppingListController::class, 'list'])->name('front.list');
+        Route::post('/register', [ShoppingListController::class, 'register']);
+        Route::delete('/delete/{shopping_list_id}', [ShoppingListController::class, 'delete'])->whereNumber('shopping_list_id')->name('delete');
+        Route::post('/complete/{shopping_list_id}', [ShoppingListController::class, 'complete'])->whereNumber('shopping_list_id')->name('complete');
+    });
+    // 購入済み「買うもの」一覧
+    Route::get('/completed_shopping_list/list', [CompletedShoppingListController::class, 'list']);
+    // ログアウト
+    Route::get('/logout', [AuthController::class, 'logout']);
 });
 
 // 管理画面
-Route::get('/admin', [AdminAuthController::class, 'index'])->name('admin.login');
-Route::post('/admin/login', [AdminAuthController::class, 'store']);
-Route::get('/admin/logout', [AdminAuthController::class, 'destroy']);
-
-Route::middleware('admin.auth')->group(function () {
-    Route::get('/admin/home', [AdminHomeController::class, 'index']);
-    Route::get('/admin/user/list', [AdminUserController::class, 'index']);
+Route::prefix('/admin')->group(function () {
+    Route::get('', [AdminAuthController::class, 'index'])->name('admin.index');
+    Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login');
+    // 認可処理
+    Route::middleware(['auth:admin'])->group(function () {
+        Route::get('/top', [AdminHomeController::class, 'top'])->name('admin.top');
+        Route::get('/user/list', [AdminUserController::class, 'list'])->name('admin.user.list');
+        // ログアウト
+        Route::get('/logout', [AdminAuthController::class, 'logout']);
+    });
 });

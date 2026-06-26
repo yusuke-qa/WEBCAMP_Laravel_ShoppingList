@@ -7,7 +7,7 @@
     {{ session('message') }}<br>
 @endif
 
-<form action="/shopping-list" method="post">
+<form action="/shopping_list/register" method="post">
     @csrf
     「買うもの」名:<input type="text" name="name"><br>
     <input type="submit" value="「買うもの」を登録する">
@@ -27,14 +27,14 @@
         <td>{{ $item->created_at->format('Y/m/d') }}</td>
         <td>{{ $item->name }}</td>
         <td>
-            <form action="/shopping-list/{{ $item->id }}/complete" method="post">
+            <form action="/shopping_list/complete/{{ $item->id }}" method="post">
                 @csrf
                 <input type="submit" value="完了"
                     onclick="return confirm('この「買うもの」を「完了」にします。よろしいですか？')">
             </form>
         </td>
         <td>
-            <form action="/shopping-list/{{ $item->id }}" method="post">
+            <form action="/shopping_list/delete/{{ $item->id }}" method="post">
                 @csrf
                 @method('DELETE')
                 <input type="submit" value="削除"

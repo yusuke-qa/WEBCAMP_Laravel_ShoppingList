@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 
-class AdminUserController extends Controller
+class UserController extends Controller
 {
-    public function index()
+    public function list()
     {
         $users = User::withCount('completedShoppingLists')->get();
         return view('admin.user_list', compact('users'));
