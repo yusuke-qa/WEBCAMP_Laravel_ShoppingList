@@ -11,9 +11,9 @@ class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
-        AdminUser::create([
-            'login_id' => 'admin',
-            'password' => 'password123',
-        ]);
+        AdminUser::firstOrCreate(
+            ['login_id' => 'admin'],
+            ['password' => 'password123']
+        );
     }
 }
